@@ -1,59 +1,51 @@
-setInterval(() =>{
-    let hours = document.getElementById('hours');
-    let minutes = document.getElementById('minutes');
-    let seconds = document.getElementById('seconds');
-    let ampm = document.getElementById('ampm');
+setInterval(() => {
+  let hours = document.getElementById("hours");
+  let minutes = document.getElementById("minutes");
+  let seconds = document.getElementById("seconds");
+  let ampm = document.getElementById("ampm");
 
-    let hh = document.getElementById('hh');
-    let mm = document.getElementById('mm');
-    let ss = document.getElementById('ss');
+  let hh = document.getElementById("hh");
+  let mm = document.getElementById("mm");
+  let ss = document.getElementById("ss");
 
-    let hr_dot = document.querySelector('.hr_dot');
-    let min_dot = document.querySelector('.min_dot');
-    let sec_dot = document.querySelector('.sec_dot');
+  let hr_dot = document.querySelector(".hr_dot");
+  let min_dot = document.querySelector(".min_dot");
+  let sec_dot = document.querySelector(".sec_dot");
 
-    
-    let h = new Date().getHours();
-    let m = new Date().getMinutes();
-    let s = new Date().getSeconds();
-    let am = h >= 12 ? "PM" : "AM";
-    
-    // convert 24hr clock to 12hr clock
-    
-    if (h > 12){
-        h = h -12;
-    }
-    
-    // add zero before single digit number
-    
-    h = (h < 10)? "0" + h : h;
-    m = (m < 10)? "0" + m : m;
-    s = (s < 10)? "0" + s : s;
-    
-    
-    hours.innerHTML = h + "<br><span>Hours</span>";
-    minutes.innerHTML = m + "<br><span>Minutes</span>";
-    seconds.innerHTML = s + "<br><span>Seconds</span>";
-    ampm.innerHTML = am
+  // 1. Pegar os valores numéricos puros primeiro
+  let date = new Date();
+  let raw_h = date.getHours();
+  let raw_m = date.getMinutes();
+  let raw_s = date.getSeconds();
 
-    hh.style.strokeDashoffset = 440 -(440 * h) / 12;
-    
-    // 12 hrs clock
-    mm.style.strokeDashoffset = 440 -(440 * m) / 60;
-    
-    // 60 minutes
-    ss.style.strokeDashoffset = 440 -(440 * s) / 60;
-    // 60 seconds
+  let am = raw_h >= 12 ? "PM" : "AM";
 
+  // Converter para formato 12 horas (numérico)
+  let display_h = raw_h;
+  if (display_h > 12) {
+    display_h = display_h - 12;
+  }
+  if (display_h === 0) {
+    display_h = 12; // Garante que meia-noite/meio-dia mostre 12 e não 00
+  }
 
-    hr_dot.style.transform = `rotate(${h * 30}deg)` ;
-    // 360 / 12 = 30
+  // 2. Fazer os cálculos matemáticos com os números puros
+  hh.style.strokeDashoffset = 440 - (440 * display_h) / 12;
+  mm.style.strokeDashoffset = 440 - (440 * raw_m) / 60;
+  ss.style.strokeDashoffset = 440 - (440 * raw_s) / 60;
 
-    min_dot.style.transform = `rotate(${m * 6}deg)` ;
-    // 360 / 60 = 6
+  hr_dot.style.transform = `rotate(${display_h * 30}deg)`;
+  min_dot.style.transform = `rotate(${raw_m * 6}deg)`;
+  sec_dot.style.transform = `rotate(${raw_s * 6}deg)`;
 
-    sec_dot.style.transform = `rotate(${s * 6}deg)` ;
-    // 360 / 60 = 6
-      
-})
+  // 3. Formatar com zero à esquerda apenas para exibição do texto
+  let h = display_h < 10 ? "0" + display_h : display_h;
+  let m = raw_m < 10 ? "0" + raw_m : raw_m;
+  let s = raw_s < 10 ? "0" + raw_s : raw_s;
 
+  // Atualizar o HTML
+  hours.innerHTML = h + "<br><span>Hours</span>";
+  minutes.innerHTML = m + "<br><span>Minutes</span>";
+  seconds.innerHTML = s + "<br><span>Seconds</span>";
+  ampm.innerHTML = am;
+}, 1000);
